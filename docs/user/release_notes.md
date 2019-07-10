@@ -9,15 +9,25 @@ This release adds some usability improvements, and fixes an annoying bug in the 
 An oft-requested feature was for the Step view widget to display which step already has been applied.
 Note that this is independent from whether you actually clicked the button: it will consider the step active if applying it would not change anything.
 
-The firmware had a bug where if the Spark couldn't find the network, it would retry before the previous serach was finished. This would significantly slow down everything else.
+The firmware had a bug where if the Spark couldn't find the network, it would retry before the previous search was finished. This would significantly slow down everything.
 
 **Changes**
 
+**_Firmware_**
+
 - Fixed a bug where the controller becomes very slow if Wifi is unavailable.
-- Improved the PID response to setpoint changes.
-  - The proportional part of the calculation uses the immediate (unfiltered) value.
-  - The integral still uses the filtered value.
-- Added a filter option to Setpoint: unfiltered.
+- Changed filter implementation in Setpoint.
+  - The filter levels themselves have changed
+  - The filter levels are available simultaneously
+- Independent PID derivative filter
+  - The derivative is now taken from an automatically selected filter level, so it is indepedent of the filter chosen.
+  - The proportional part of the calculation uses the selected filter, but can now be set much shorter.
+- Changing PID Kp now does not affect integral output (it also scaled to keep the same output)
+- More accurate calculation of achieved PWM value. This resolves apparent peaks at the start of the cycle.
+- Update interval tracking and adjustment for PID and filter to the average interval is exactly 1 second
+
+**_User interface_**
+
 - Improved display of pending state in Digital Actuators and Motor Valves.
   - State is pending if one or more constraints block it.
   - A spinner is displayed over the desired state.
